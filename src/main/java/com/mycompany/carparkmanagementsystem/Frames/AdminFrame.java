@@ -1,6 +1,6 @@
 package com.mycompany.carparkmanagementsystem.Frames;
 
-import com.mycompany.carparkmanagementsystem.Database.Database;
+import com.mycompany.carparkmanagementsystem.Utils.Database;
 import java.awt.GridLayout;
 import java.awt.BorderLayout;
 import java.io.File;
@@ -12,17 +12,19 @@ import javax.swing.JPanel;
 import javax.swing.JOptionPane;
 
 public class AdminFrame {
+
     private JFrame mainFrame;
-    
-    public AdminFrame(){
+
+    public AdminFrame() {
         JFrame adminFrame = new JFrame("Admin Mode");
         JPanel mainPanel = new JPanel(new BorderLayout());
         JPanel buttonPanel = new JPanel(new GridLayout(3, 0));
-        
-        try{
+
+        try {
             adminFrame.setIconImage(ImageIO.read(new File("img/icon.png")));
-        } catch (IOException ex){}
-        
+        } catch (IOException ex) {
+        }
+
         JButton displayVehicles = new JButton("Display vehicles in car park");
         JButton amendRecord = new JButton("Amend/Delete a record");
         JButton searchVRN = new JButton("Search for a VRN");
@@ -34,55 +36,57 @@ public class AdminFrame {
 
         mainPanel.add(buttonPanel, BorderLayout.CENTER);
         mainPanel.add(switchModes, BorderLayout.PAGE_END);
-        
+
         switchModes.addActionListener(e -> {
             mainFrame.setVisible(false);
             new ModeSelectionFrame();
             System.out.println("Opened ModeSelectionFrame");
-            }
+        }
         );
-        
+
         displayVehicles.addActionListener(e -> {
             Database db = new Database();
             String[][] vehicleList = db.getVehiclesInCarPark();
-            
-            new VehicleListFrame(vehicleList);
+
+            new VehicleListFrame(vehicleList, true);
             System.out.println("Opened VehicleListFrame : VehiclesInCarPark");
-            }
+        }
         );
-        
+
         amendRecord.addActionListener(e -> {
             Database db = new Database();
             String[][] vehicleList = db.allVehicles();
-            new VehicleListFrame(vehicleList);
+            new VehicleListFrame(vehicleList, false);
             System.out.println("Opened VehicleListFrame : AllVehicles");
-            }
+        }
         );
-        
+
         searchVRN.addActionListener(e -> {
-                String result = (String)JOptionPane.showInputDialog(
-               mainFrame,
-               "Enter a vehicle registration number", 
-               "Search for a VRN",            
-               JOptionPane.PLAIN_MESSAGE,
-               null,            
-               null, 
-               ""
+            String result = (String) JOptionPane.showInputDialog(
+                    null,
+                    "Enter a vehicle registration number",
+                    "Search for a VRN",
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    null,
+                    ""
             );
-            if(result != null && result.length() > 0){
+            if (result != null && result.length() > 0) {
                 Database db = new Database();
                 String[][] recordList = db.searchVRNRecords(result);
-                                
-                new VehicleListFrame(recordList);
+
+                new VehicleListFrame(recordList, true);
                 System.out.println("Opened VehicleListFrame : Search");
-            }}
+            }
+        }
         );
-  
+
         adminFrame.setContentPane(mainPanel);
         adminFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         adminFrame.setSize(300, 325);
+        adminFrame.setLocation(50, 50);
         adminFrame.setVisible(true);
-        
+
         mainFrame = adminFrame;
     }
 }

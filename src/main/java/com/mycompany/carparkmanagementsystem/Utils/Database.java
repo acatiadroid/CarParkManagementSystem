@@ -1,4 +1,4 @@
-package com.mycompany.carparkmanagementsystem.Database;
+package com.mycompany.carparkmanagementsystem.Utils;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -18,7 +18,7 @@ public class Database {
     public Database() {
         readCSV();
     }
-    
+
     public String[][] allVehicles() {
         // Converts the ArrayList to a standard Array type.
         int csvLen = csvList.size();
@@ -87,42 +87,42 @@ public class Database {
     public void amendRecord(int recordNumber, String VRN, String entryDate, String entryTime, String exitDate, String exitTime) {
         // Amends a specific record from the database.
         String[][] allVehicles = allVehicles();
-        
+
         allVehicles[recordNumber][0] = VRN;
         allVehicles[recordNumber][1] = entryDate;
         allVehicles[recordNumber][2] = entryTime;
         allVehicles[recordNumber][3] = exitDate;
         allVehicles[recordNumber][4] = exitTime;
-        
+
         writeToFile(allVehicles);
     }
-    
+
     public String deleteRecord(int recordNumber) {
         // Deletes a specific record from the database.
         String[][] allVehicles = allVehicles();
         String[][] newArr = new String[allVehicles.length - 1][4];
-        
-        for(int i=0, k=0; i < allVehicles.length; i++){
-            if(i != recordNumber) {
+
+        for (int i = 0, k = 0; i < allVehicles.length; i++) {
+            if (i != recordNumber) {
                 newArr[k] = allVehicles[i];
                 k++;
             }
         }
-        
+
         writeToFile(newArr);
-        
+
         return allVehicles[recordNumber][0]; // returning deleted VRN to display to user in message box
     }
-    
-    public void addRecord(String VRN){
+
+    public void addRecord(String VRN) {
         String date = new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime());
         String time = new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime());
-        
+
         String[][] allVehicles = allVehicles();
         String[][] newArr = new String[allVehicles.length + 1][5];
-        
+
         int count = 0;
-        for(String[] record : allVehicles) {
+        for (String[] record : allVehicles) {
             newArr[count] = record;
             count++;
         }
@@ -131,40 +131,45 @@ public class Database {
         newArr[count][2] = time;
         newArr[count][3] = "notExited";
         newArr[count][4] = "notExited";
-        
+
         writeToFile(newArr);
     }
-    
-    public int checkVehicleExited(String VRN){
+
+    public int checkVehicleExited(String VRN) {
         // Checks whether the given VRN has exited the car park
         String[][] allVehicles = allVehicles();
-        
+
         int lastOccurance = 0;
         int count = 0;
-        for(String[] record : allVehicles){
-            if(record[0].equals(VRN)){
+        for (String[] record : allVehicles) {
+            if (record[0].equals(VRN)) {
                 lastOccurance = count;
             }
             count++;
         }
-        
+
         return lastOccurance;
     }
-    
-    public void exitVehicle(String VRN){
+
+    public void exitVehicle(String VRN) {
         // "exits" a vehicle from the car park
         String date = new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime());
         String time = new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime());
-        
+
         int recordNum = checkVehicleExited(VRN);
         String[][] allVehicles = allVehicles();
         
+        if (!"notExited".equals(allVehicles[recordNum][3])){
+            System.out.println("Tried exiting vehicle that's already exited: " + VRN);
+            return;
+        }
+
         allVehicles[recordNum][3] = date;
         allVehicles[recordNum][4] = time;
-        
-        writeToFile(allVehicles);  
+
+        writeToFile(allVehicles);
     }
-    
+
     // ------------------------------ PRIVATE METHODS -------------------------------
     private void readCSV() {
         // Reads the CSV file and writes it into an ArrayList object.
@@ -193,16 +198,16 @@ public class Database {
             System.out.println(ex);
         }
     }
-    
-    private void writeToFile(String[][] updatedArray){
+
+    private void writeToFile(String[][] updatedArray) {
         // Writes an array to a file in CSV format.
         String finalOutput = "";
-        
+
         for (String[] record : updatedArray) {
             String recordToString = record[0] + "," + record[1] + "," + record[2] + "," + record[3] + "," + record[4] + "\n";
             finalOutput = finalOutput + recordToString;
         }
-        
+
         try {
             FileWriter output = new FileWriter(filePath);
             output.write(finalOutput);

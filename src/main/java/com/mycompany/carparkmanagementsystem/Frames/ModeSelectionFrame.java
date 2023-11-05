@@ -9,7 +9,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 
-
 public class ModeSelectionFrame {
 
     private JFrame mainFrame;
@@ -17,10 +16,11 @@ public class ModeSelectionFrame {
     public ModeSelectionFrame() {
         JFrame modeSelectionFrame = new JFrame("Select Mode");
         JPanel contentPanel = new JPanel(new GridLayout(3, 0));
-        
-        try{
+
+        try {
             modeSelectionFrame.setIconImage(ImageIO.read(new File("img/icon.png")));
-        } catch (IOException ex){}
+        } catch (IOException ex) {
+        }
         JLabel title = new JLabel("Select a mode:");
         title.setHorizontalAlignment(0);
         title.setVerticalAlignment(0);
@@ -47,6 +47,7 @@ public class ModeSelectionFrame {
         modeSelectionFrame.setContentPane(contentPanel);
         modeSelectionFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         modeSelectionFrame.setSize(300, 200);
+        modeSelectionFrame.setLocation(50, 50);
         modeSelectionFrame.setVisible(true);
 
         mainFrame = modeSelectionFrame;
