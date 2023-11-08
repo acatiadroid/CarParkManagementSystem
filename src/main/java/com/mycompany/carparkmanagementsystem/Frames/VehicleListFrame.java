@@ -1,6 +1,9 @@
 package com.mycompany.carparkmanagementsystem.Frames;
 
+// Local imports
 import com.mycompany.carparkmanagementsystem.Utils.Database;
+
+// External imports
 import java.awt.GridLayout;
 import java.awt.BorderLayout;
 import java.io.File;
@@ -18,26 +21,24 @@ public class VehicleListFrame {
     private JFrame mainFrame;
 
     public VehicleListFrame(String[][] data, boolean filteredList) {
-        String[] columnNames = {"VRN", "Entry Date", "Entry Time", "Exit Date", "Exit Time"};
-
-        System.out.println(filteredList);
+        String[] columnNames = {"VRN", "Entry Date", "Entry Time", "Exit Date", "Exit Time"}; // Table titles
 
         JFrame vehicleListFrame = new JFrame("Vehicle List");
         JPanel mainPanel = new JPanel(new BorderLayout());
-        JPanel buttonPanel = new JPanel(new GridLayout(1, 2));
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 2)); // Creates a 1 x 2 table.
 
-        try {
+        try { // tries adding the icon to the window, and skips if file not found.
             vehicleListFrame.setIconImage(ImageIO.read(new File("img/icon.png")));
         } catch (IOException ex) {
         }
         JTable table = new JTable(data, columnNames);
-        JScrollPane sp = new JScrollPane(table);
+        JScrollPane sp = new JScrollPane(table); // Adds a scroll bar to the window to scroll through records
         JButton amendButton = new JButton("Amend Selected Record");
         JButton deleteButton = new JButton("Delete selected record");
 
         mainPanel.add(sp, BorderLayout.CENTER);
 
-        if (!filteredList) {
+        if (!filteredList) { // Add buttons to the bottom only if the list isn't filtered (I.E. only showing vehicles in car park).
             buttonPanel.add(amendButton);
             buttonPanel.add(deleteButton);
             mainPanel.add(buttonPanel, BorderLayout.PAGE_END);
@@ -57,7 +58,7 @@ public class VehicleListFrame {
             amendRecordFrame.populateTextFields(row);
             System.out.println("Opened AmendRecordWindow");
 
-            mainFrame.setVisible(false);
+            mainFrame.dispose();
         }
         );
 
@@ -76,7 +77,7 @@ public class VehicleListFrame {
                 Database db = new Database();
                 String deletedVRN = db.deleteRecord(row);
 
-                mainFrame.setVisible(false);
+                mainFrame.dispose();
                 JOptionPane.showMessageDialog(null, "Deleted record with VRN " + deletedVRN);
 
             }
@@ -85,7 +86,7 @@ public class VehicleListFrame {
         vehicleListFrame.getContentPane().add(mainPanel);
         vehicleListFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         vehicleListFrame.setSize(500, 350);
-        vehicleListFrame.setLocation(350, 50);
+        vehicleListFrame.setLocation(350, 50); // Opens window to the right of the screen
         vehicleListFrame.setVisible(true);
 
         mainFrame = vehicleListFrame;

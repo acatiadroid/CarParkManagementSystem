@@ -1,5 +1,6 @@
 package com.mycompany.carparkmanagementsystem.Frames;
 
+// External Imports
 import java.awt.GridLayout;
 import java.io.File;
 import java.io.IOException;
@@ -15,14 +16,14 @@ public class ModeSelectionFrame {
 
     public ModeSelectionFrame() {
         JFrame modeSelectionFrame = new JFrame("Select Mode");
-        JPanel contentPanel = new JPanel(new GridLayout(3, 0));
+        JPanel contentPanel = new JPanel(new GridLayout(3, 1)); // Creates a 3 x 1 grid
 
-        try {
+        try { // tries adding the icon to the window, and skips if file not found.
             modeSelectionFrame.setIconImage(ImageIO.read(new File("img/icon.png")));
         } catch (IOException ex) {
         }
         JLabel title = new JLabel("Select a mode:");
-        title.setHorizontalAlignment(0);
+        title.setHorizontalAlignment(0); // Centers the label
         title.setVerticalAlignment(0);
 
         JButton recordModeButton = new JButton("Record Mode");
@@ -32,20 +33,20 @@ public class ModeSelectionFrame {
         contentPanel.add(adminModeButton);
 
         recordModeButton.addActionListener(e -> {
-            new RecordFrame();
-            mainFrame.setVisible(false);
+            new RecordFrame(); // Opens record mode window
+            mainFrame.dispose(); // Closes mode selection window
             System.out.println("Opened RecordFrame");
         }
         );
         adminModeButton.addActionListener(e -> {
             new AdminFrame();
-            mainFrame.setVisible(false);
+            mainFrame.dispose();
             System.out.println("Opened AdminFrame");
         }
         );
 
         modeSelectionFrame.setContentPane(contentPanel);
-        modeSelectionFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        modeSelectionFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Exits the entire program when window is closed
         modeSelectionFrame.setSize(300, 200);
         modeSelectionFrame.setLocation(50, 50);
         modeSelectionFrame.setVisible(true);

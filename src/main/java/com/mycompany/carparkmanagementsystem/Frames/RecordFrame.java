@@ -1,7 +1,10 @@
 package com.mycompany.carparkmanagementsystem.Frames;
 
+// Local imports
 import com.mycompany.carparkmanagementsystem.Utils.Database;
 import com.mycompany.carparkmanagementsystem.Utils.Validation;
+
+// External imports
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.Font;
@@ -21,19 +24,19 @@ public class RecordFrame {
 
     public RecordFrame() {
         JFrame recordFrame = new JFrame("Record Mode");
-        try {
+        try { // tries adding the icon to the window, and skips if file not found.
             recordFrame.setIconImage(ImageIO.read(new File("img/icon.png")));
         } catch (IOException ex) {
         }
 
-        JPanel mainPanel = new JPanel(new BorderLayout());
-        JPanel contentPanel = new JPanel(new GridLayout(3, 0));
+        JPanel mainPanel = new JPanel(new BorderLayout()); // Creates a border layout which essentially has a header and footer
+        JPanel contentPanel = new JPanel(new GridLayout(3, 1)); // Creates a 3 x 1 grid
 
         JLabel title = new JLabel("Enter the Vehicle Registration:");
         title.setHorizontalAlignment(0);
         title.setVerticalAlignment(0);
 
-        Font font1 = new Font("SansSerif", Font.BOLD, 20);
+        Font font1 = new Font("SansSerif", Font.BOLD, 20); // Making font bigger to make VRN stand out.
         JTextField inputVRN = new JTextField(1);
         inputVRN.setHorizontalAlignment(JTextField.CENTER);
         inputVRN.setFont(font1);
@@ -45,10 +48,10 @@ public class RecordFrame {
 
         JButton switchModes = new JButton("Switch Modes");
 
-        mainPanel.add(contentPanel, BorderLayout.CENTER);
-        mainPanel.add(switchModes, BorderLayout.PAGE_END);
+        mainPanel.add(contentPanel, BorderLayout.CENTER);  // insert into center of BorderLayout
+        mainPanel.add(switchModes, BorderLayout.PAGE_END); // insert into 'footer' of BorderLayout
         recordFrame.setContentPane(mainPanel);
-        recordFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        recordFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Exits the entire program when closed
         recordFrame.setSize(350, 220);
         recordFrame.setLocation(50, 50);
         recordFrame.setVisible(true);
@@ -79,11 +82,10 @@ public class RecordFrame {
         });
 
         switchModes.addActionListener(e -> {
-            mainFrame.setVisible(false);
+            mainFrame.dispose();
             new ModeSelectionFrame();
             System.out.println("Opened ModeSelectionFrame");
         }
         );
-
     }
 }
