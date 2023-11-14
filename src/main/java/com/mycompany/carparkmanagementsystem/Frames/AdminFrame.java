@@ -76,15 +76,15 @@ public class AdminFrame {
             );
             if (result != null && result.length() > 0) {
                 Database db = new Database();
-                
+
                 Validation validate = new Validation();
                 boolean validVRN = validate.checkVRNFormat(result);
-                
+
                 if (!validVRN) { // VRN format is incorrect
                     JOptionPane.showMessageDialog(null, "Vehicle Registration Number is the incorrect format.");
                     return;
                 }
-                String[][] recordList = db.searchVRNRecords(result); // search database for user input.
+                String[][] recordList = db.searchVRNRecords(validate.convertToUppercase(result)); // search database for user input.
 
                 new VehicleListFrame(recordList, true);
                 System.out.println("Opened VehicleListFrame : Search");

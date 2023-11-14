@@ -50,7 +50,7 @@ public class AmendRecordFrame {
 
         JButton submitButton = new JButton("Amend");
         JButton backButton = new JButton("Back");
-        
+
         // Insert the components into the 7 x 2 grid
         contentPanel.add(vehicleExited);
         contentPanel.add(new JLabel("")); // empty label so grid layout is layed out properly
@@ -88,50 +88,56 @@ public class AmendRecordFrame {
 
         submitButton.addActionListener(e -> {
             Database db = new Database();
-            
+
             // If the vehicle has already exited and the user wants to 'exit' it
             // again, ask them for confirmation and update the exit date & time
             // to current time.
             if (vehicleExited.isSelected()) {
                 if (!exitDateInput.getText().equals("notExited")) {
                     int dialogResult = JOptionPane.showConfirmDialog(
-                            null, 
+                            null,
                             "This vehicle has been recorded as exited. Do you want to overwrite it?",
-                            "Record already exited", 
+                            "Record already exited",
                             JOptionPane.YES_NO_OPTION
                     );
-                    
+
                     if (dialogResult == JOptionPane.YES_OPTION) { // if 'Yes' is selected on confirmation.
                         db.amendRecord(
-                        recNum,
-                        VRNInput.getText(),
-                        entryDateInput.getText(),
-                        entryTimeInput.getText(),
-                        exitDateInput.getText(),
-                        exitTimeInput.getText()
+                                recNum,
+                                VRNInput.getText(),
+                                entryDateInput.getText(),
+                                entryTimeInput.getText(),
+                                exitDateInput.getText(),
+                                exitTimeInput.getText()
                         );
                     } else {
                         return;
                     }
                 }
-                
+
                 db.exitVehicle(VRNInput.getText()); // amend database to exit vehicle with current date & time
                 mainWindow.dispose(); // destroy window. Wipes it from memory.
                 JOptionPane.showMessageDialog(null, "Vehicle has been recorded as exited.");
-                
+
                 return;
             }
-            
+            Validation validate = new Validation();
+
+            String VRN = validate.convertToUppercase(VRNInput.getText());
+            String entryDate = entryDateInput.getText();
+            String entryTime = entryTimeInput.getText();
+            String exitDate = exitDateInput.getText();
+            String exitTime = exitTimeInput.getText();
+
             // Validation to determine whether the data entered is sensible data.
             // This only checks whether it's sensible, not correct. It checks whether
             // the date format follows 00/00/0000, time format follows 00:00:00, and
             // VRN format follows XX00XXX
-            Validation validate = new Validation();
-            boolean validVRN = validate.checkVRNFormat(VRNInput.getText());
-            boolean validEntryDate = validate.checkDateFormat(entryDateInput.getText());
-            boolean validExitDate = validate.checkDateFormat(exitDateInput.getText());
-            boolean validEntryTime = validate.checkTimeFormat(entryTimeInput.getText());
-            boolean validExitTime = validate.checkTimeFormat(exitTimeInput.getText());
+            boolean validVRN = validate.checkVRNFormat(VRN);
+            boolean validEntryDate = validate.checkDateFormat(entryDate);
+            boolean validExitDate = validate.checkDateFormat(exitDate);
+            boolean validEntryTime = validate.checkTimeFormat(entryTime);
+            boolean validExitTime = validate.checkTimeFormat(exitTime);
 
             if (!validVRN) {
                 JOptionPane.showMessageDialog(null, "Vehicle Registration Number is incorrect.\nExample format: YK19ABC");
@@ -153,23 +159,22 @@ public class AmendRecordFrame {
                 JOptionPane.showMessageDialog(null, "Exit time is invalid\nExample format: 09:24:56");
                 return;
             }
-            
+
             db.amendRecord( // Validation has passed, amend database
                     recNum,
-                    VRNInput.getText(),
-                    entryDateInput.getText(),
-                    entryTimeInput.getText(),
-                    exitDateInput.getText(),
-                    exitTimeInput.getText()
+                    VRN,
+                    entryDate,
+                    entryTime,
+                    exitDate,
+                    exitTime
             );
             JOptionPane.showMessageDialog(null, "Record has been amended.");
-            
+
             mainWindow.dispose();
         });
 
         backButton.addActionListener(e -> { // Closes the window and opens the admin frame.
             mainWindow.dispose();
-            new AdminFrame();
         });
 
         amendRecordFrame.setContentPane(contentPanel);
@@ -178,20 +183,20 @@ public class AmendRecordFrame {
         amendRecordFrame.setLocation(350, 50); // Offsets the window to the right of the Admin Frame.
         amendRecordFrame.setVisible(true);
     }
-    
-        public void populateTextFields(int recordNumber) {
-            // When loading the window, this is called to populate the text field
-            // with the pre-existing data in the selected record.
-            Database db = new Database();
-            String[][] allRecords = db.allVehicles();
-            String[] record = allRecords[recordNumber];
 
-            VRNInput.setText(record[0]);
-            entryDateInput.setText(record[1]);
-            entryTimeInput.setText(record[2]);
-            exitDateInput.setText(record[3]);
-            exitTimeInput.setText(record[4]);
+    public void populateTextFields(int recordNumber) {
+        // When loading the window, this is called to populate the text field
+        // with the pre-existing data in the selected record.
+        Database db = new Database();
+        String[][] allRecords = db.allVehicles();
+        String[] record = allRecords[recordNumber];
 
-            recNum = recordNumber; // needed later for referencing in database.
-        }
+        VRNInput.setText(record[0]);
+        entryDateInput.setText(record[1]);
+        entryTimeInput.setText(record[2]);
+        exitDateInput.setText(record[3]);
+        exitTimeInput.setText(record[4]);
+
+        recNum = recordNumber; // needed later for referencing in database.
+    }
 }

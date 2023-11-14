@@ -22,7 +22,7 @@ public class CarParkManagementSystem {
         } else {
             System.out.println("Verified " + filePath + " exists.");
         }
-        
+
         new ModeSelectionFrame(); // loads the UI instance
         System.out.println("Opened ModeSelectionFrame");
     }

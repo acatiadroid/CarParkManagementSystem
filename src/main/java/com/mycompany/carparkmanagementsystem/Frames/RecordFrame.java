@@ -59,8 +59,9 @@ public class RecordFrame {
         mainFrame = recordFrame;
 
         enterButton.addActionListener(e -> {
-            String VRN = inputVRN.getText();
             Validation validate = new Validation();
+            String VRN = validate.convertToUppercase(inputVRN.getText());
+
             boolean validVRN = validate.checkVRNFormat(VRN);
 
             if (validVRN == false) {
